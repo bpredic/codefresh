@@ -38,5 +38,26 @@ namespace Tests
 				}
 			};
 		}
+
+		[Fact]
+		public async Task GetAllOwners_ReturnsOkResponse()
+		{
+			// Act
+			var response = await _context.Client.GetAsync("/api/owner");
+			response.EnsureSuccessStatusCode();
+			// Assert
+			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		}
+		[Fact]
+		public async Task GetAllOwners_ReturnsAListOfOwners()
+		{
+			// Act
+			var response = await _context.Client.GetAsync("/api/owner");
+			response.EnsureSuccessStatusCode();
+			var responseString = await response.Content.ReadAsStringAsync();
+			var owners = JsonConvert.DeserializeObject<List<OwnerDto>>(responseString);
+			// Assert
+			Assert.NotEmpty(owners);
+		}
 	}
 }
